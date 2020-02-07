@@ -1,7 +1,14 @@
 ## set env
 
 ```sh
-source .env
+export AUTH_CODE=abc
+export AUTH_TOKEN=xyz
+export AUTH_URI=http://localhost:5001
+export AUTH_USER_INFO=hogeta_fugazou
+export CLIENT_ID=123
+export CLIENT_URI=http://localhost:5000
+export RESOURCE_URI=http://localhost:5002
+export SOCIAL_URI=http://localhost:5003
 ```
 
 ## start
