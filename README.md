@@ -3,10 +3,10 @@
 ```sh
 export SAF_AUTH_CODE=abc
 export SAF_AUTH_TOKEN=xyz
-export SAF_AUTH_SERVER_URI=http://localhost:5001
-export SAF_USER_SUB=hogeta_fugazou
 export SAF_CLIENT_ID=123
+export SAF_USER_SUB=hogeta_fugazou
 export SAF_CLIENT_SERVER_URI=http://localhost:5000
+export SAF_AUTH_SERVER_URI=http://localhost:5001
 export SAF_RESOURCE_SERVER_URI=http://localhost:5002
 export SAF_SOCIAL_SERVER_URI=http://localhost:5003
 ```
