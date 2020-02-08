@@ -1,4 +1,5 @@
 require 'webrick'
+require 'securerandom'
 
 auth_port = ENV['SAF_AUTH_SERVER_URI'].match(/\Ahttp:\/\/localhost:(?<port>.+?)\z/)[:port].to_i
 server = WEBrick::HTTPServer.new :Port => auth_port
@@ -28,9 +29,10 @@ end
 
 class Permit < WEBrick::HTTPServlet::AbstractServlet
   def do_GET request, response
+    $auth_code = SecureRandom.urlsafe_base64(16)
     redirect_uri = request.query['redirect_uri']
     response.status = 302
-    response['Location'] = "#{redirect_uri}?code=#{ENV['SAF_AUTH_CODE']}"
+    response['Location'] = "#{redirect_uri}?code=#{$auth_code}"
   end
 end
 
@@ -48,7 +50,7 @@ class Token < WEBrick::HTTPServlet::AbstractServlet
     code = request.query['code']
     redirect_uri = request.query['redirect_uri']
 
-    if grant_type == 'authorization_code' && request.query['code'] == ENV['SAF_AUTH_CODE'] && redirect_uri == "#{ENV['SAF_SOCIAL_SERVER_URI']}/callback"
+    if grant_type == 'authorization_code' && request.query['code'] == $auth_code && redirect_uri == "#{ENV['SAF_SOCIAL_SERVER_URI']}/callback"
       response.status = 200
       response['Content-Type'] = 'text/plain'
       response.body = "access_token:#{ENV['SAF_AUTH_TOKEN']},token_tyep:Bearer"
