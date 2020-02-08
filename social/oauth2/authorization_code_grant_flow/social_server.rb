@@ -6,7 +6,7 @@ server = WEBrick::HTTPServer.new :Port => 5003
 class Authentication < WEBrick::HTTPServlet::AbstractServlet
   def do_GET request, response
     callback = "#{ENV['SOCIAL_URI']}/callback"
-    client_id = ENV['CLIENT_ID']
+    client_id = ENV['SAF_CLIENT_ID']
     location =
       "#{ENV['SAF_AUTH_SERVER_URI']}/authorization?"\
       'response_type=code'\

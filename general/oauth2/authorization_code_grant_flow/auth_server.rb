@@ -9,7 +9,7 @@ class Authorization < WEBrick::HTTPServlet::AbstractServlet
     redirect_uri = request.query['redirect_uri']
 
     # check client_id & callback
-    if response_type == 'code' && client_id == ENV['CLIENT_ID'] && redirect_uri == "#{ENV['CLIENT_URI']}/callback"
+    if response_type == 'code' && client_id == ENV['SAF_CLIENT_ID'] && redirect_uri == "#{ENV['CLIENT_URI']}/callback"
       response.status = 200
       response['Content-Type'] = 'text/html'
       body =
