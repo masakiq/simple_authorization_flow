@@ -28,13 +28,13 @@ end
 
 class Callback < WEBrick::HTTPServlet::AbstractServlet
   def do_POST request, response
-    id_token = request.body.match(/\A(.+?)id_token=(?<id_token>.+?)\z/)[:id_token] if request.body.include?('id_token=')
+    params = request.body.split('&').inject({}) { |r, q| r.merge(q.split('=')[0] => q.split('=')[1]) }
 
-    if id_token&.size.to_i > 0
+    if params['id_token']&.size.to_i > 0
       public_key_uri = "#{ENV['AUTH_URI']}/public_key"
       res = Net::HTTP.get_response(URI.parse(public_key_uri)).body
       public_key = OpenSSL::PKey::RSA.new(res)
-      claims = JSON::JWT.decode(id_token, public_key)
+      claims = JSON::JWT.decode(params['id_token'], public_key)
 
       response.status = 302
       response['Location'] = "#{ENV['POTAL_URI']}/finish?user_info=#{claims[:sub]}"
