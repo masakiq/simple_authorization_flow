@@ -5,7 +5,8 @@ STDERR.sync = true
 STDOUT.flush
 STDERR.flush
 
-server = WEBrick::HTTPServer.new :Port => 5001
+auth_port = ENV['SAF_AUTH_SERVER_URI'].match(/\Ahttp:\/\/localhost:(?<port>.+?)\z/)[:port].to_i
+server = WEBrick::HTTPServer.new :Port => auth_port
 
 class Authorization < WEBrick::HTTPServlet::AbstractServlet
   def do_GET request, response

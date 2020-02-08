@@ -1,7 +1,8 @@
 require 'webrick'
 require 'net/http'
 
-server = WEBrick::HTTPServer.new :Port => 5000
+client_port = ENV['SAF_CLIENT_SERVER_URI'].match(/\Ahttp:\/\/localhost:(?<port>.+?)\z/)[:port].to_i
+server = WEBrick::HTTPServer.new :Port => client_port
 
 class Root < WEBrick::HTTPServlet::AbstractServlet
   def do_GET request, response

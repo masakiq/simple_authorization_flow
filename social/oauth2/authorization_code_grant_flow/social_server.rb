@@ -1,7 +1,8 @@
 require 'webrick'
 require 'net/http'
 
-server = WEBrick::HTTPServer.new :Port => 5003
+social_port = ENV['SAF_SOCIAL_SERVER_URI'].match(/\Ahttp:\/\/localhost:(?<port>.+?)\z/)[:port].to_i
+server = WEBrick::HTTPServer.new :Port => social_port
 
 class Authentication < WEBrick::HTTPServlet::AbstractServlet
   def do_GET request, response
