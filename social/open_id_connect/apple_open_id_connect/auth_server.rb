@@ -20,7 +20,7 @@ class Authorization < WEBrick::HTTPServlet::AbstractServlet
       'aud' => client_id,
       'exp' => Time.now.to_i + 3600,
       'iat' => Time.now.to_i,
-      'sub' => ENV['AUTH_USER_INFO'],
+      'sub' => ENV['SAF_USER_SUB'],
       'nonce' => 'nonce'
     }
     id_token = JSON::JWT.new(claim).sign($key, :RS256).to_s

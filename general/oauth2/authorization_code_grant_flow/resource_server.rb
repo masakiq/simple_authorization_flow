@@ -7,7 +7,7 @@ class UserInfo < WEBrick::HTTPServlet::AbstractServlet
     if request.query['access_token'] == ENV['SAF_AUTH_TOKEN']
       response.status = 200
       response['Content-Type'] = 'text/plain'
-      response.body = ENV['AUTH_USER_INFO']
+      response.body = ENV['SAF_USER_SUB']
     else
       response.status = 400
       response['Content-Type'] = 'text/plain'
