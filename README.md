@@ -8,7 +8,7 @@ export SAF_USER_SUB=hogeta_fugazou
 export SAF_CLIENT_ID=123
 export SAF_CLIENT_SERVER_URI=http://localhost:5000
 export SAF_RESOURCE_SERVER_URI=http://localhost:5002
-export SOCIAL_URI=http://localhost:5003
+export SAF_SOCIAL_SERVER_URI=http://localhost:5003
 ```
 
 ## start

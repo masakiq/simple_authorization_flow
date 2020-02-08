@@ -26,7 +26,7 @@ class Authorization < WEBrick::HTTPServlet::AbstractServlet
     id_token = JSON::JWT.new(claim).sign($key, :RS256).to_s
 
     # check client_id & callback
-    if response_type == 'id_token' && response_mode == 'form_post' && client_id == ENV['SAF_CLIENT_ID'] && redirect_uri == "#{ENV['SOCIAL_URI']}/callback"
+    if response_type == 'id_token' && response_mode == 'form_post' && client_id == ENV['SAF_CLIENT_ID'] && redirect_uri == "#{ENV['SAF_SOCIAL_SERVER_URI']}/callback"
       response.status = 200
       response['Content-Type'] = 'text/html'
       body = "
