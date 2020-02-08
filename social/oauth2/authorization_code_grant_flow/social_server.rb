@@ -32,7 +32,7 @@ class Callback < WEBrick::HTTPServlet::AbstractServlet
       res = Net::HTTP.get_response(URI.parse(token_uri)).body
       access_token = res.split(',').first.match(/access_token:(?<token>.+)/)[:token]
 
-      user_info_uri = "#{ENV['RESOURCE_URI']}/user_info?access_token=#{access_token}"
+      user_info_uri = "#{ENV['SAF_RESOURCE_SERVER_URI']}/user_info?access_token=#{access_token}"
       user_info = Net::HTTP.get_response(URI.parse(user_info_uri)).body
 
       response.status = 302
