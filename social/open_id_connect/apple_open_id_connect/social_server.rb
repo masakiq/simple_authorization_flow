@@ -35,10 +35,10 @@ class Callback < WEBrick::HTTPServlet::AbstractServlet
       claims = JSON::JWT.decode(id_token, public_key)
 
       response.status = 302
-      response['Location'] = "#{ENV['CLIENT_URI']}/finish?user_info=#{claims[:sub]}"
+      response['Location'] = "#{ENV['SAF_CLIENT_SERVER_URI']}/finish?user_info=#{claims[:sub]}"
     else
       response.status = 302
-      response['Location'] = "#{ENV['CLIENT_URI']}/finish?authorization=failed"
+      response['Location'] = "#{ENV['SAF_CLIENT_SERVER_URI']}/finish?authorization=failed"
     end
   end
 end

@@ -36,10 +36,10 @@ class Callback < WEBrick::HTTPServlet::AbstractServlet
       user_info = Net::HTTP.get_response(URI.parse(user_info_uri)).body
 
       response.status = 302
-      response['Location'] = "#{ENV['CLIENT_URI']}/finish?user_info=#{user_info}"
+      response['Location'] = "#{ENV['SAF_CLIENT_SERVER_URI']}/finish?user_info=#{user_info}"
     else
       response.status = 302
-      response['Location'] = "#{ENV['CLIENT_URI']}/finish?authorization=failed"
+      response['Location'] = "#{ENV['SAF_CLIENT_SERVER_URI']}/finish?authorization=failed"
     end
   end
 end

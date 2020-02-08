@@ -9,7 +9,7 @@ class Authorization < WEBrick::HTTPServlet::AbstractServlet
     redirect_uri = request.query['redirect_uri']
 
     # check client_id & callback
-    if response_type == 'code' && client_id == ENV['SAF_CLIENT_ID'] && redirect_uri == "#{ENV['CLIENT_URI']}/callback"
+    if response_type == 'code' && client_id == ENV['SAF_CLIENT_ID'] && redirect_uri == "#{ENV['SAF_CLIENT_SERVER_URI']}/callback"
       response.status = 200
       response['Content-Type'] = 'text/html'
       body =
@@ -47,7 +47,7 @@ class Token < WEBrick::HTTPServlet::AbstractServlet
     code = request.query['code']
     redirect_uri = request.query['redirect_uri']
 
-    if grant_type == 'authorization_code' && request.query['code'] == ENV['SAF_AUTH_CODE'] && redirect_uri == "#{ENV['CLIENT_URI']}/callback"
+    if grant_type == 'authorization_code' && request.query['code'] == ENV['SAF_AUTH_CODE'] && redirect_uri == "#{ENV['SAF_CLIENT_SERVER_URI']}/callback"
       response.status = 200
       response['Content-Type'] = 'text/plain'
       response.body = "access_token:#{ENV['SAF_AUTH_TOKEN']},token_tyep:Bearer"

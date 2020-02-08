@@ -11,7 +11,7 @@ server = WEBrick::HTTPServer.new :Port => 5000
 class Root < WEBrick::HTTPServlet::AbstractServlet
   def do_GET request, response
     client_id = ENV['SAF_CLIENT_ID']
-    callback = "#{ENV['CLIENT_URI']}/callback"
+    callback = "#{ENV['SAF_CLIENT_SERVER_URI']}/callback"
     location =
       "#{ENV['SAF_AUTH_SERVER_URI']}/authorization?"\
       'response_type=id_token'\
