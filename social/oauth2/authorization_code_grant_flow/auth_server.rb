@@ -50,7 +50,7 @@ class Token < WEBrick::HTTPServlet::AbstractServlet
     if grant_type == 'authorization_code' && request.query['code'] == ENV['SAF_AUTH_CODE'] && redirect_uri == "#{ENV['SOCIAL_URI']}/callback"
       response.status = 200
       response['Content-Type'] = 'text/plain'
-      response.body = "access_token:#{ENV['AUTH_TOKEN']},token_tyep:Bearer"
+      response.body = "access_token:#{ENV['SAF_AUTH_TOKEN']},token_tyep:Bearer"
     else
       response.status = 400
       response['Content-Type'] = 'text/plain'
