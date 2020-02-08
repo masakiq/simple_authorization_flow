@@ -5,7 +5,8 @@ STDERR.sync = true
 STDOUT.flush
 STDERR.flush
 
-server = WEBrick::HTTPServer.new :Port => 5001
+auth_port = ENV['SAF_AUTH_SERVER_URI'].match(/\Ahttp:\/\/localhost:(?<port>.+?)\z/)[:port].to_i
+server = WEBrick::HTTPServer.new :Port => auth_port
 
 class Authorization < WEBrick::HTTPServlet::AbstractServlet
   def do_GET request, response
@@ -20,13 +21,13 @@ class Authorization < WEBrick::HTTPServlet::AbstractServlet
       'aud' => client_id,
       'exp' => Time.now.to_i + 3600,
       'iat' => Time.now.to_i,
-      'sub' => ENV['AUTH_USER_INFO'],
+      'sub' => ENV['SAF_USER_SUB'],
       'nonce' => 'nonce'
     }
     id_token = JSON::JWT.new(claim).sign($key, :RS256).to_s
 
     # check client_id & callback
-    if response_type == 'id_token' && response_mode == 'form_post' && client_id == ENV['CLIENT_ID'] && redirect_uri == "#{ENV['SOCIAL_URI']}/callback"
+    if response_type == 'id_token' && response_mode == 'form_post' && client_id == ENV['SAF_CLIENT_ID'] && redirect_uri == "#{ENV['SAF_SOCIAL_SERVER_URI']}/callback"
       response.status = 200
       response['Content-Type'] = 'text/html'
       body = "

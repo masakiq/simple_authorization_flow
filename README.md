@@ -1,14 +1,14 @@
 ## set env
 
 ```sh
-export AUTH_CODE=abc
-export AUTH_TOKEN=xyz
-export AUTH_URI=http://localhost:5001
-export AUTH_USER_INFO=hogeta_fugazou
-export CLIENT_ID=123
-export CLIENT_URI=http://localhost:5000
-export RESOURCE_URI=http://localhost:5002
-export SOCIAL_URI=http://localhost:5003
+export SAF_AUTH_CODE=abc
+export SAF_AUTH_TOKEN=xyz
+export SAF_CLIENT_ID=123
+export SAF_USER_SUB=hogeta_fugazou
+export SAF_CLIENT_SERVER_URI=http://localhost:5000
+export SAF_AUTH_SERVER_URI=http://localhost:5001
+export SAF_RESOURCE_SERVER_URI=http://localhost:5002
+export SAF_SOCIAL_SERVER_URI=http://localhost:5003
 ```
 
 ## start
