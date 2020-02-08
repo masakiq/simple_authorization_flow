@@ -13,7 +13,7 @@ class Root < WEBrick::HTTPServlet::AbstractServlet
     client_id = ENV['CLIENT_ID']
     callback = "#{ENV['CLIENT_URI']}/callback"
     location =
-      "#{ENV['AUTH_URI']}/authorization?"\
+      "#{ENV['SAF_AUTH_SERVER_URI']}/authorization?"\
       'response_type=id_token'\
       '&response_mode=form_post'\
       "&client_id=#{client_id}"\
@@ -36,7 +36,7 @@ class Callback < WEBrick::HTTPServlet::AbstractServlet
       return
     end
 
-    public_key_uri = "#{ENV['AUTH_URI']}/public_key"
+    public_key_uri = "#{ENV['SAF_AUTH_SERVER_URI']}/public_key"
     res = Net::HTTP.get_response(URI.parse(public_key_uri)).body
     public_key = OpenSSL::PKey::RSA.new(res)
     claims = JSON::JWT.decode(params['id_token'], public_key)

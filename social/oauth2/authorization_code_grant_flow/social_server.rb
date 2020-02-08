@@ -8,7 +8,7 @@ class Authentication < WEBrick::HTTPServlet::AbstractServlet
     callback = "#{ENV['SOCIAL_URI']}/callback"
     client_id = ENV['CLIENT_ID']
     location =
-      "#{ENV['AUTH_URI']}/authorization?"\
+      "#{ENV['SAF_AUTH_SERVER_URI']}/authorization?"\
       'response_type=code'\
       "&client_id=#{client_id}"\
       "&redirect_uri=#{callback}"
@@ -25,7 +25,7 @@ class Callback < WEBrick::HTTPServlet::AbstractServlet
 
     if code&.size.to_i > 0
       token_uri =
-        "#{ENV['AUTH_URI']}/token"\
+        "#{ENV['SAF_AUTH_SERVER_URI']}/token"\
         "?grant_type=authorization_code"\
         "&code=#{code}"\
         "&redirect_uri=#{callback}"

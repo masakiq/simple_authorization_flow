@@ -3,7 +3,7 @@
 ```sh
 export SAF_AUTH_CODE=abc
 export SAF_AUTH_TOKEN=xyz
-export AUTH_URI=http://localhost:5001
+export SAF_AUTH_SERVER_URI=http://localhost:5001
 export AUTH_USER_INFO=hogeta_fugazou
 export CLIENT_ID=123
 export CLIENT_URI=http://localhost:5000
