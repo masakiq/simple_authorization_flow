@@ -1,5 +1,6 @@
 require 'webrick'
 require 'securerandom'
+require 'net/http'
 
 auth_port = ENV['SAF_AUTH_SERVER_URI'].match(/\Ahttp:\/\/localhost:(?<port>.+?)\z/)[:port].to_i
 server = WEBrick::HTTPServer.new :Port => auth_port
@@ -50,14 +51,23 @@ class Token < WEBrick::HTTPServlet::AbstractServlet
     code = request.query['code']
     redirect_uri = request.query['redirect_uri']
 
-    if grant_type == 'authorization_code' && request.query['code'] == $auth_code && redirect_uri == "#{ENV['SAF_CLIENT_SERVER_URI']}/callback"
-      response.status = 200
-      response['Content-Type'] = 'text/plain'
-      response.body = "access_token:#{ENV['SAF_AUTH_TOKEN']},token_tyep:Bearer"
-    else
+    if grant_type != 'authorization_code' || request.query['code'] != $auth_code || redirect_uri != "#{ENV['SAF_CLIENT_SERVER_URI']}/callback"
       response.status = 400
       response['Content-Type'] = 'text/plain'
-      response.body = 'invalid auth_code'
+      response.body = 'Invalid auth_code'
+      return
+    end
+
+    uri = URI("#{ENV['SAF_RESOURCE_SERVER_URI']}/issue_token")
+    res = Net::HTTP.post_form(uri, private_token: 'private_token')
+    if res.code == '200'
+      response.status = 200
+      response['Content-Type'] = 'text/plain'
+      response.body = "access_token:#{res.body},token_tyep:Bearer"
+    else
+      response.status = 500
+      response['Content-Type'] = 'text/plain'
+      response.body = 'Internal server error'
     end
   end
 end
