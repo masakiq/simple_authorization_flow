@@ -33,7 +33,7 @@ class Callback < WEBrick::HTTPServlet::AbstractServlet
 
     if params['id_token']&.size.to_i == 0
       response.status = 302
-      response['Location'] = "#{ENV['POTAL_URI']}/finish?authorization=failed"
+      response['Location'] = "/finish?authorization=failed"
       return
     end
 
@@ -42,8 +42,17 @@ class Callback < WEBrick::HTTPServlet::AbstractServlet
     public_key = OpenSSL::PKey::RSA.new(res)
     claims = JSON::JWT.decode(params['id_token'], public_key)
 
+    failed_message = []
+    failed_message << 'Client_id is different' if claims['aud'] != ENV['SAF_CLIENT_ID']
+    failed_message << 'ID Token already expired' if claims[:exp] < Time.now.to_i
+
     response.status = 302
-    response['Location'] = "#{ENV['POTAL_URI']}/finish?user_info=#{claims[:sub]}"
+    if failed_message.size == 0
+      response['Location'] = "/finish?user_info=#{claims[:sub]}"
+    else
+      message = failed_message.join('+')
+      response['Location'] = "/finish?authorization=failed&message=#{message}"
+    end
   end
 end
 
