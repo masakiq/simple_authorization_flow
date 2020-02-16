@@ -1,14 +1,24 @@
 ## set env
 
+### Client ID & User Info
+
 ```sh
 export SAF_CLIENT_ID=123
 export SAF_USER_SUB=hogeta_fugazou
+```
 
+### Redirect URI
+
+```sh
 # for general
 export SAF_REDIRECT_URI=http://localhost:5000/callback
 # for social
 export SAF_REDIRECT_URI=http://localhost:5003/callback
+```
 
+### Server URI
+
+```sh
 export SAF_CLIENT_SERVER_URI=http://localhost:5000
 export SAF_AUTH_SERVER_URI=http://localhost:5001
 export SAF_RESOURCE_SERVER_URI=http://localhost:5002
@@ -17,27 +27,46 @@ export SAF_SOCIAL_SERVER_URI=http://localhost:5003
 
 ## start
 
-* for fish
+### auth server
+
 ```sh
-for i in (find ./* -name '*.rb'); nohup ruby $i & ;end
+bin/auth_server
 ```
 
-## print pids
+### open_id_connect server
 
 ```sh
-ps aux | grep ruby | grep -v grep | awk '{print $2}'
+bin/open_id_server
 ```
 
-## kill pids
+### general auth client
 
 ```sh
-ps aux | grep ruby | grep -v grep | awk '{printf("%s ",$2); system("kill " $2)}'
+bin/general/auth_client
 ```
 
-## rm nohup.out
+### general open_id_connect client
 
 ```sh
-rm -rf */**/*.out
+bin/general/open_id_client
+```
+
+### social auth client
+
+```sh
+bin/social/auth_client
+```
+
+### social open_id_connect client
+
+```sh
+bin/social/open_id_client
+```
+
+## kill servers
+
+```sh
+bin/kill_servers
 ```
 
 ## tree
