@@ -2,5 +2,5 @@
 
 for i in `find oauth2/authorization_code/* -name '*.rb'`
 do
-  nohup ruby $i > log/out.log &
+  nohup ruby $i > log/authorization_code.log &
 done
