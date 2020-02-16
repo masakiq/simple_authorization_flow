@@ -28,7 +28,7 @@ class Authorization < WEBrick::HTTPServlet::AbstractServlet
     token = {
       'exp' => Time.now.to_i + 300,
       'one_time_token' => $one_time_token,
-      'client_ie' => client_id,
+      'client_id' => client_id,
       'redirect_uri' => redirect_uri
     }
     signed_token = JSON::JWT.new(token).sign($key, :RS256).to_s
