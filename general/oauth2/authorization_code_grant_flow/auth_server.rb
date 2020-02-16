@@ -48,12 +48,14 @@ class Deny < WEBrick::HTTPServlet::AbstractServlet
 end
 
 class Token < WEBrick::HTTPServlet::AbstractServlet
-  def do_GET request, response
-    grant_type = request.query['grant_type']
-    code = request.query['code']
-    redirect_uri = request.query['redirect_uri']
+  def do_POST request, response
+    params = request.body.split('&').inject({}) { |r, q| r.merge(q.split('=')[0] => q.split('=')[1]) }
 
-    if grant_type != 'authorization_code' || request.query['code'] != $auth_code || redirect_uri != "#{ENV['SAF_CLIENT_SERVER_URI']}/callback"
+    grant_type = params['grant_type']
+    code = params['code']
+    redirect_uri = URI.decode(params['redirect_uri'])
+
+    if grant_type != 'authorization_code' || code != $auth_code || redirect_uri != "#{ENV['SAF_CLIENT_SERVER_URI']}/callback"
       response.status = 400
       response['Content-Type'] = 'text/plain'
       response.body = 'Invalid auth_code'
@@ -65,7 +67,7 @@ class Token < WEBrick::HTTPServlet::AbstractServlet
     if res.code == '200'
       response.status = 200
       response['Content-Type'] = 'text/plain'
-      response.body = "access_token:#{res.body},token_tyep:Bearer"
+      response.body = res.body
     else
       response.status = 500
       response['Content-Type'] = 'text/plain'
