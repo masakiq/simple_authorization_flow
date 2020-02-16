@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+ps aux | grep ruby | grep -v grep | awk '{printf("%s ",$2); system("kill " $2)}'

@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+for i in `find oauth2/authorization_code/* -name '*.rb'`
+do
+  nohup ruby $i > log/out.log &
+done
