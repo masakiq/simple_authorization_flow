@@ -16,6 +16,7 @@ class Authorization < WEBrick::HTTPServlet::AbstractServlet
     response_mode = request.query['response_mode']
     client_id = request.query['client_id']
     redirect_uri = request.query['redirect_uri']
+    state = request.query['state']
 
     if response_type != 'id_token' || response_mode != 'form_post' && client_id != ENV['SAF_CLIENT_ID'] && redirect_uri != "#{ENV['SAF_CLIENT_SERVER_URI']}/callback"
       response.status = 400
@@ -38,6 +39,7 @@ class Authorization < WEBrick::HTTPServlet::AbstractServlet
     body = "
       <form action='/permit' method='post'>
         <input type='hidden' name='token' id='token' value='#{signed_token}'>
+        <input type='hidden' name='state' id='state' value='#{state}'>
         <button style='width:100;height:50;'>permit</button>
       </form>
       <form action='#{redirect_uri}' method='post'>
@@ -81,6 +83,7 @@ class Permit < WEBrick::HTTPServlet::AbstractServlet
       <body onload='javascript:document.forms[0].submit()'>
       <form action='#{token[:redirect_uri]}' method='post'>
         <input type='hidden' name='id_token' id='id_token' value='#{id_token}'>
+        <input type='hidden' name='state' id='state' value='#{params['state']}'>
       </form>
     "
     response.body = body

@@ -13,16 +13,19 @@ class Root < WEBrick::HTTPServlet::AbstractServlet
   def do_GET request, response
     client_id = ENV['SAF_CLIENT_ID']
     callback = "#{ENV['SAF_CLIENT_SERVER_URI']}/callback"
+    $state = SecureRandom.urlsafe_base64(10)
     location =
       "#{ENV['SAF_AUTH_SERVER_URI']}/authorization?"\
       'response_type=id_token'\
       '&response_mode=form_post'\
       "&client_id=#{client_id}"\
-      "&redirect_uri=#{callback}"
+      "&redirect_uri=#{callback}"\
+      "&state=#{$state}"
 
     response.status = 200
     response['Content-Type'] = 'text/html'
-    body = "<button type='button' style='width:100;height:50;' onclick='location.href=\"#{location}\"'>SIWA</button>"
+    body = '<link rel="icon" href="data:,">'
+    body << "<button type='button' style='width:100;height:50;' onclick='location.href=\"#{location}\"'>SIWA</button>"
     response.body = body
   end
 end
@@ -31,8 +34,9 @@ class Callback < WEBrick::HTTPServlet::AbstractServlet
   def do_POST request, response
     params = request.body.split('&').inject({}) { |r, q| r.merge(q.split('=')[0] => q.split('=')[1]) }
 
-    if params['id_token']&.size.to_i == 0
-      response.status = 302
+    response.status = 302
+
+    if params['id_token']&.size.to_i == 0 || params['state'] != $state
       response['Location'] = "/finish?authorization=failed"
       return
     end
@@ -46,7 +50,6 @@ class Callback < WEBrick::HTTPServlet::AbstractServlet
     failed_message << 'Client_id is different' if claims['aud'] != ENV['SAF_CLIENT_ID']
     failed_message << 'ID Token already expired' if claims[:exp] < Time.now.to_i
 
-    response.status = 302
     if failed_message.size == 0
       response['Location'] = "/finish?user_info=#{claims[:sub]}"
     else
@@ -58,14 +61,20 @@ end
 
 class Finish < WEBrick::HTTPServlet::AbstractServlet
   def do_GET request, response
+    body = '<link rel="icon" href="data:,">'
+
     if request.query['user_info']&.size.to_i > 0
       response.status = 200
-      response['Content-Type'] = 'text/plain'
-      response.body = "Finish, user_info: #{request.query['user_info']}"
+      response['Content-Type'] = 'text/html'
+      body << "<p>Finish, user_info: #{request.query['user_info']}</p>"
+      body << "<button type='button' style='width:100;height:50;' onclick='location.href=\"/\"'>again</button>"
+      response.body = body
     else
       response.status = 200
-      response['Content-Type'] = 'text/plain'
-      response.body = 'Finish, authorization failed'
+      response['Content-Type'] = 'text/html'
+      body << '<p>Finish, authorization failed</p>'
+      body << "<button type='button' style='width:100;height:50;' onclick='location.href=\"/\"'>again</button>"
+      response.body = body
     end
   end
 end
