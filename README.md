@@ -4,7 +4,10 @@
 export SAF_CLIENT_ID=123
 export SAF_USER_SUB=hogeta_fugazou
 
+# for general
 export SAF_REDIRECT_URI=http://localhost:5000/callback
+# for social
+export SAF_REDIRECT_URI=http://localhost:5003/callback
 
 export SAF_CLIENT_SERVER_URI=http://localhost:5000
 export SAF_AUTH_SERVER_URI=http://localhost:5001

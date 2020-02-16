@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+for i in `find social/oauth/open_id_connect/* -name '*.rb'`
+do
+  nohup ruby $i > log/open_id_connect.log &
+done
