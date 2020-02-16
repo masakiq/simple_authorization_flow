@@ -14,13 +14,15 @@ class Root < WEBrick::HTTPServlet::AbstractServlet
     client_id = ENV['SAF_CLIENT_ID']
     callback = "#{ENV['SAF_CLIENT_SERVER_URI']}/callback"
     $state = SecureRandom.urlsafe_base64(10)
+    $nonce = SecureRandom.urlsafe_base64(10)
     location =
       "#{ENV['SAF_AUTH_SERVER_URI']}/authorization?"\
       'response_type=id_token'\
       '&response_mode=form_post'\
       "&client_id=#{client_id}"\
       "&redirect_uri=#{callback}"\
-      "&state=#{$state}"
+      "&state=#{$state}"\
+      "&nonce=#{$nonce}"
 
     response.status = 200
     response['Content-Type'] = 'text/html'
@@ -49,6 +51,7 @@ class Callback < WEBrick::HTTPServlet::AbstractServlet
     failed_message = []
     failed_message << 'Client_id is different' if claims['aud'] != ENV['SAF_CLIENT_ID']
     failed_message << 'ID Token already expired' if claims[:exp] < Time.now.to_i
+    failed_message << 'Nonce is defferent' if claims[:nonce] != $nonce
 
     if failed_message.size == 0
       response['Location'] = "/finish?user_info=#{claims[:sub]}"

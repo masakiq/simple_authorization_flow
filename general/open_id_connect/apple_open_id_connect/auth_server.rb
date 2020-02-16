@@ -17,6 +17,7 @@ class Authorization < WEBrick::HTTPServlet::AbstractServlet
     client_id = request.query['client_id']
     redirect_uri = request.query['redirect_uri']
     state = request.query['state']
+    nonce = request.query['nonce']
 
     if response_type != 'id_token' || response_mode != 'form_post' && client_id != ENV['SAF_CLIENT_ID'] && redirect_uri != "#{ENV['SAF_CLIENT_SERVER_URI']}/callback"
       response.status = 400
@@ -30,7 +31,8 @@ class Authorization < WEBrick::HTTPServlet::AbstractServlet
       'exp' => Time.now.to_i + 300,
       'one_time_token' => $one_time_token,
       'client_id' => client_id,
-      'redirect_uri' => redirect_uri
+      'redirect_uri' => redirect_uri,
+      'nonce' => nonce
     }
     signed_token = JSON::JWT.new(token).sign($key, :RS256).to_s
 
@@ -73,7 +75,7 @@ class Permit < WEBrick::HTTPServlet::AbstractServlet
       'exp' => Time.now.to_i + 3600,
       'iat' => Time.now.to_i,
       'sub' => ENV['SAF_USER_SUB'],
-      'nonce' => 'nonce'
+      'nonce' => token[:nonce]
     }
     id_token = JSON::JWT.new(claim).sign($key, :RS256).to_s
 
