@@ -1,6 +1,7 @@
 require 'webrick'
 require 'net/http'
 require 'json/jwt'
+require 'securerandom'
 STDOUT.sync = true
 STDERR.sync = true
 STDOUT.flush
