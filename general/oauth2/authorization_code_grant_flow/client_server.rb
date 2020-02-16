@@ -38,14 +38,19 @@ class Callback < WEBrick::HTTPServlet::AbstractServlet
       return
     end
 
-    token_uri =
-      "#{ENV['SAF_AUTH_SERVER_URI']}/token"\
-      "?grant_type=authorization_code"\
-      "&code=#{code}"\
-      "&redirect_uri=#{callback}"
-    res = Net::HTTP.get_response(URI.parse(token_uri)).body
-    access_token = res.split(',').first.match(/access_token:(?<token>.+)/)[:token]
+    uri = URI("#{ENV['SAF_AUTH_SERVER_URI']}/token")
+    res = Net::HTTP.post_form(
+      uri,
+      grant_type: 'authorization_code',
+      code: code,
+      redirect_uri: callback
+    )
+    if res.code != '200'
+      response['Location'] = '/finish?authorization=failed&invalid_auth_code'
+      return
+    end
 
+    access_token = res.body
     user_info_uri = "#{ENV['SAF_RESOURCE_SERVER_URI']}/user_info?access_token=#{access_token}"
     user_info = Net::HTTP.get_response(URI.parse(user_info_uri)).body
 
