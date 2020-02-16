@@ -55,7 +55,7 @@ class Token < WEBrick::HTTPServlet::AbstractServlet
     code = params['code']
     redirect_uri = URI.decode(params['redirect_uri'])
 
-    if grant_type != 'authorization_code' || code != $auth_code || redirect_uri != "#{ENV['SAF_REDIRECT_URI']}/callback"
+    if grant_type != 'authorization_code' || code != $auth_code || redirect_uri != "#{ENV['SAF_REDIRECT_URI']}"
       response.status = 400
       response['Content-Type'] = 'text/plain'
       response.body = 'Invalid auth_code'
