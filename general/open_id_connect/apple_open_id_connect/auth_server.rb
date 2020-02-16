@@ -32,6 +32,7 @@ class Authorization < WEBrick::HTTPServlet::AbstractServlet
       'one_time_token' => $one_time_token,
       'client_id' => client_id,
       'redirect_uri' => redirect_uri,
+      'state' => state,
       'nonce' => nonce
     }
     signed_token = JSON::JWT.new(token).sign($key, :RS256).to_s
@@ -41,7 +42,6 @@ class Authorization < WEBrick::HTTPServlet::AbstractServlet
     body = "
       <form action='/permit' method='post'>
         <input type='hidden' name='token' id='token' value='#{signed_token}'>
-        <input type='hidden' name='state' id='state' value='#{state}'>
         <button style='width:100;height:50;'>permit</button>
       </form>
       <form action='#{redirect_uri}' method='post'>
@@ -85,7 +85,7 @@ class Permit < WEBrick::HTTPServlet::AbstractServlet
       <body onload='javascript:document.forms[0].submit()'>
       <form action='#{token[:redirect_uri]}' method='post'>
         <input type='hidden' name='id_token' id='id_token' value='#{id_token}'>
-        <input type='hidden' name='state' id='state' value='#{params['state']}'>
+        <input type='hidden' name='state' id='state' value='#{token[:state]}'>
       </form>
     "
     response.body = body
