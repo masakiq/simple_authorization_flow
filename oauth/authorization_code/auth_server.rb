@@ -13,11 +13,12 @@ class Authorization < WEBrick::HTTPServlet::AbstractServlet
     state = request.query['state']
 
     # check client_id & callback
-    if response_type == 'code' && client_id == ENV['SAF_CLIENT_ID'] && redirect_uri == "#{ENV['SAF_CLIENT_SERVER_URI']}/callback"
+    if response_type == 'code' && client_id == ENV['SAF_CLIENT_ID'] && redirect_uri == "#{ENV['SAF_REDIRECT_URI']}"
       response.status = 200
       response['Content-Type'] = 'text/html'
       body =
         "<button type='button' style='width:100;height:50;' onclick='location.href=\"#{ENV['SAF_AUTH_SERVER_URI']}/permit?redirect_uri=#{redirect_uri}&state=#{state}\"'>permit</button>"\
+        '</br> '\
         '</br> '\
         "<button type='button' style='width:100;height:50;' onclick='location.href=\"#{ENV['SAF_AUTH_SERVER_URI']}/deny?redirect_uri=#{redirect_uri}\"'>deny</button>"
       response.body = body
@@ -55,7 +56,7 @@ class Token < WEBrick::HTTPServlet::AbstractServlet
     code = params['code']
     redirect_uri = URI.decode(params['redirect_uri'])
 
-    if grant_type != 'authorization_code' || code != $auth_code || redirect_uri != "#{ENV['SAF_CLIENT_SERVER_URI']}/callback"
+    if grant_type != 'authorization_code' || code != $auth_code || redirect_uri != "#{ENV['SAF_REDIRECT_URI']}"
       response.status = 400
       response['Content-Type'] = 'text/plain'
       response.body = 'Invalid auth_code'

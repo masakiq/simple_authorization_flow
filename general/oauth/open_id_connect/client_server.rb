@@ -1,6 +1,7 @@
 require 'webrick'
 require 'net/http'
 require 'json/jwt'
+require 'securerandom'
 STDOUT.sync = true
 STDERR.sync = true
 STDOUT.flush
@@ -27,7 +28,7 @@ class Root < WEBrick::HTTPServlet::AbstractServlet
     response.status = 200
     response['Content-Type'] = 'text/html'
     body = '<link rel="icon" href="data:,">'
-    body << "<button type='button' style='width:100;height:50;' onclick='location.href=\"#{location}\"'>SIWA</button>"
+    body << "<button type='button' style='width:100;height:50;' onclick='location.href=\"#{location}\"'>Login</button>"
     response.body = body
   end
 end

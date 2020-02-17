@@ -19,7 +19,7 @@ class Authorization < WEBrick::HTTPServlet::AbstractServlet
     state = request.query['state']
     nonce = request.query['nonce']
 
-    if response_type != 'id_token' || response_mode != 'form_post' && client_id != ENV['SAF_CLIENT_ID'] && redirect_uri != "#{ENV['SAF_CLIENT_SERVER_URI']}/callback"
+    if response_type != 'id_token' || response_mode != 'form_post' && client_id != ENV['SAF_CLIENT_ID'] && redirect_uri != "#{ENV['SAF_REDIRECT_URI']}"
       response.status = 400
       response['Content-Type'] = 'text/plain'
       response.body = 'invalid access'
