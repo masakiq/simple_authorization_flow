@@ -19,6 +19,7 @@ class Authorization < WEBrick::HTTPServlet::AbstractServlet
       body =
         "<button type='button' style='width:100;height:50;' onclick='location.href=\"#{ENV['SAF_AUTH_SERVER_URI']}/permit?redirect_uri=#{redirect_uri}&state=#{state}\"'>permit</button>"\
         '</br> '\
+        '</br> '\
         "<button type='button' style='width:100;height:50;' onclick='location.href=\"#{ENV['SAF_AUTH_SERVER_URI']}/deny?redirect_uri=#{redirect_uri}\"'>deny</button>"
       response.body = body
     else
