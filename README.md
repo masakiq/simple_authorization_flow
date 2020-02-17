@@ -7,15 +7,6 @@ export SAF_CLIENT_ID=123
 export SAF_USER_SUB=hogeta_fugazou
 ```
 
-### Redirect URI
-
-```sh
-# for general
-export SAF_REDIRECT_URI=http://localhost:5000/callback
-# for social
-export SAF_REDIRECT_URI=http://localhost:5003/callback
-```
-
 ### Server URI
 
 ```sh
@@ -23,6 +14,15 @@ export SAF_CLIENT_SERVER_URI=http://localhost:5000
 export SAF_AUTH_SERVER_URI=http://localhost:5001
 export SAF_RESOURCE_SERVER_URI=http://localhost:5002
 export SAF_SOCIAL_SERVER_URI=http://localhost:5003
+```
+
+### Redirect URI
+
+```sh
+# for general
+export SAF_REDIRECT_URI=$SAF_CLIENT_SERVER_URI/callback
+# for social
+export SAF_REDIRECT_URI=$SAF_SOCIAL_SERVER_URI/callback
 ```
 
 ## start
