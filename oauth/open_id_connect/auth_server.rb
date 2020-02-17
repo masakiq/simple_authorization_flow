@@ -55,19 +55,17 @@ end
 
 class Permit < WEBrick::HTTPServlet::AbstractServlet
   def do_POST request, response
-    one_time_token = $one_time_token
-    $one_time_token = nil
-
     params = request.body.split('&').inject({}) { |r, q| r.merge(q.split('=')[0] => q.split('=')[1]) }
-
     token = JSON::JWT.decode(params['token'], $key.public_key)
 
-    if token[:exp] < Time.now.to_i || token[:one_time_token] != one_time_token
+    if $one_time_token.nil? || token[:one_time_token] != $one_time_token || token[:exp] < Time.now.to_i
+      $one_time_token = nil
       response.status = 400
       response['Content-Type'] = 'text/plain'
       response.body = 'failed permit'
       return
     end
+    $one_time_token = nil
 
     claim = {
       'iss' => 'iss',
