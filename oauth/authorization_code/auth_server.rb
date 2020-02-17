@@ -77,8 +77,17 @@ class Token < WEBrick::HTTPServlet::AbstractServlet
   end
 end
 
+class HeartBeat < WEBrick::HTTPServlet::AbstractServlet
+  def do_GET request, response
+    response.status = 200
+    response['Content-Type'] = 'text/plain'
+    response.body = 'ok'
+  end
+end
+
 server.mount '/authorization', Authorization
 server.mount '/permit', Permit
 server.mount '/deny', Deny
 server.mount '/token', Token
+server.mount '/heart_beat', HeartBeat
 server.start
