@@ -56,10 +56,16 @@ class Token < WEBrick::HTTPServlet::AbstractServlet
     code = params['code']
     redirect_uri = URI.decode(params['redirect_uri'])
 
-    if grant_type != 'authorization_code' || code != $auth_code || redirect_uri != "#{ENV['SAF_REDIRECT_URI']}"
+    response['Content-Type'] = 'text/plain'
+
+    errors = []
+    errors << 'Not allow request token directly' if $auth_code.nil?
+    errors << 'Invalid auth_code' if code != $auth_code && errors.size == 0
+    errors << 'Invalid grant_type' if grant_type != 'authorization_code'
+    errors << 'Invalid redirect_uri' if redirect_uri != "#{ENV['SAF_REDIRECT_URI']}"
+    if errors.size > 0
       response.status = 400
-      response['Content-Type'] = 'text/plain'
-      response.body = 'Invalid auth_code'
+      response.body = errors.join(',')
       return
     end
 
@@ -67,11 +73,9 @@ class Token < WEBrick::HTTPServlet::AbstractServlet
     res = Net::HTTP.post_form(uri, private_token: 'private_token')
     if res.code == '200'
       response.status = 200
-      response['Content-Type'] = 'text/plain'
       response.body = res.body
     else
       response.status = 500
-      response['Content-Type'] = 'text/plain'
       response.body = 'Internal server error'
     end
   end
