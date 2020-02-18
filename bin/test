@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+for i in `find test/* -name '*_test.rb'`
+do
+  ruby $i
+done
